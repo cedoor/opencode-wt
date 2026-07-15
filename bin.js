@@ -84,4 +84,4 @@ if (!isGitignored) {
   prompt += ' Also, .worktrees/ is not in .gitignore — ask the user if they\'d like to add it. If they do, edit the .gitignore at the worktree path ("' + wtDir + '/.gitignore") — do not edit files outside the worktree.';
 }
 const agentFlag = agent ? ` --agent ${agent}` : "";
-execSync(`opencode "${wtDir}" --prompt "${prompt}"${agentFlag}`, { stdio: "inherit" });
+execSync(`opencode --prompt "${prompt}"${agentFlag}`, { cwd: wtDir, stdio: "inherit" });
