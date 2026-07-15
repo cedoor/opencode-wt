@@ -1,9 +1,10 @@
 {
-  "name": "wt",
+  "name": "opencode-wt",
   "version": "1.0.0",
+  "type": "module",
   "description": "Create git worktrees and open opencode in them",
   "bin": {
-    "wt": "./bin.js"
+    "opencode-wt": "./bin.js"
   },
   "keywords": ["git", "worktree", "opencode"],
   "license": "MIT"

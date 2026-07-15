@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const { execSync } = require("child_process");
-const { mkdirSync, existsSync, readFileSync, appendFileSync } = require("fs");
-const { join } = require("path");
+import { execSync } from "child_process";
+import { mkdirSync, existsSync, readFileSync, appendFileSync } from "fs";
+import { join } from "path";
 
 const name = process.argv[2];
 let root;
@@ -15,11 +15,10 @@ try {
 const worktreesDir = join(root, ".worktrees");
 const wtDir = join(worktreesDir, name || Date.now().toString());
 
-// Ensure .worktrees is git-ignored
+// Check if .worktrees is git-ignored
 const gitignore = join(root, ".gitignore");
-if (!existsSync(gitignore) || !readFileSync(gitignore, "utf-8").includes(".worktrees/")) {
-  appendFileSync(gitignore, "\n# Local worktrees\n.worktrees/\n");
-}
+const isGitignored =
+  existsSync(gitignore) && readFileSync(gitignore, "utf-8").includes(".worktrees/");
 
 mkdirSync(worktreesDir, { recursive: true });
 
@@ -33,4 +32,8 @@ if (name) {
   execSync(`git worktree add --detach "${wtDir}"`, { stdio: "inherit" });
 }
 
-execSync(`opencode "${wtDir}"`, { stdio: "inherit" });
+let prompt = `Welcome the user and ask what they'd like to work on. You are running inside a git worktree at "${wtDir}" — a separate working directory linked to the main repo. The main repo is at "${root}". Keep this in mind for file paths and git operations.`;
+if (!isGitignored) {
+  prompt += " Also, .worktrees/ is not in .gitignore — ask the user if they'd like to add it (editing .gitignore here affects the main repo since worktrees share the same git root).";
+}
+execSync(`opencode "${wtDir}" --prompt "${prompt}"`, { stdio: "inherit" });
