@@ -18,7 +18,7 @@ if (flag === "--help" || flag === "-h") {
 Create a git worktree and open opencode in it.
 
 Arguments:
-  issue-number    GitHub issue number (creates branch issue-<N> and fetches issue context)
+  issue-number    GitHub issue number (creates branch issue-<N> and tells the agent about it)
   agent           Optional agent name passed to opencode
 
 Flags:
@@ -63,23 +63,10 @@ if (name) {
   execSync(`git worktree add --detach "${wtDir}"`, { stdio: "inherit" });
 }
 
-let issueContext = "";
+let prompt = `Welcome the user and ask what they'd like to work on. You are running inside a git worktree at "${wtDir}" — a separate working directory linked to the main repo. Always use "${wtDir}" as your working directory — worktrees have separate working directories, so files created in the main repo won't be visible here, and vice versa.`;
 if (issueNumber) {
-  try {
-    const issue = JSON.parse(
-      execSync(`gh issue view ${issueNumber} --json title,body`, { encoding: "utf-8" })
-    );
-    issueContext = `\n\nThe user created this worktree for issue #${issueNumber}.\nTitle: ${issue.title}`;
-    if (issue.body) {
-      issueContext += `\nDescription:\n${issue.body}`;
-    }
-    issueContext += `\n\nAsk the user if they'd like to start working on this issue.`;
-  } catch {
-    issueContext = `\n\nThe user created this worktree for issue #${issueNumber}, but the issue could not be fetched from GitHub. Ask them what they'd like to work on.`;
-  }
+  prompt += ` The user created this worktree for issue #${issueNumber}. Use your GitHub tools to fetch the issue details and ask if they'd like to start working on it.`;
 }
-
-let prompt = `Welcome the user and ask what they'd like to work on. You are running inside a git worktree at "${wtDir}" — a separate working directory linked to the main repo. Always use "${wtDir}" as your working directory — worktrees have separate working directories, so files created in the main repo won't be visible here, and vice versa.${issueContext}`;
 if (!isGitignored) {
   prompt += ' Also, .worktrees/ is not in .gitignore — ask the user if they\'d like to add it. If they do, edit the .gitignore at the worktree path ("' + wtDir + '/.gitignore") — do not edit files outside the worktree.';
 }
