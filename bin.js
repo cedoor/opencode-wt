@@ -4,6 +4,7 @@ import { mkdirSync, existsSync, readFileSync, appendFileSync } from "fs";
 import { join } from "path";
 
 const issueNumber = process.argv[2];
+const agent = process.argv[3];
 const name = issueNumber ? `issue-${issueNumber}` : undefined;
 let root;
 try {
@@ -37,4 +38,5 @@ let prompt = `Welcome the user and ask what they'd like to work on. You are runn
 if (!isGitignored) {
   prompt += ' Also, .worktrees/ is not in .gitignore — ask the user if they\'d like to add it. If they do, edit the .gitignore at the worktree path ("' + wtDir + '/.gitignore") — do not edit files outside the worktree.';
 }
-execSync(`opencode "${wtDir}" --prompt "${prompt}"`, { stdio: "inherit" });
+const agentFlag = agent ? ` --agent ${agent}` : "";
+execSync(`opencode "${wtDir}" --prompt "${prompt}"${agentFlag}`, { stdio: "inherit" });
