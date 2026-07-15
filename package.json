@@ -1,6 +1,6 @@
 {
   "name": "opencode-wt",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "description": "Create git worktrees and open opencode in them",
   "bin": {
