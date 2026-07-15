@@ -34,6 +34,6 @@ if (name) {
 
 let prompt = `Welcome the user and ask what they'd like to work on. You are running inside a git worktree at "${wtDir}" — a separate working directory linked to the main repo. The main repo is at "${root}". Keep this in mind for file paths and git operations. Always use "${wtDir}" as your working directory — worktrees have separate working directories, so files created in the main repo won't be visible here, and vice versa.`;
 if (!isGitignored) {
-  prompt += " Also, .worktrees/ is not in .gitignore — ask the user if they'd like to add it (editing .gitignore here affects the main repo since worktrees share the same git root).";
+  prompt += ' Also, .worktrees/ is not in .gitignore — ask the user if they\'d like to add it. If they do, edit the .gitignore at the worktree path ("' + wtDir + '/.gitignore") — do not edit files outside the worktree.';
 }
 execSync(`opencode "${wtDir}" --prompt "${prompt}"`, { stdio: "inherit" });
