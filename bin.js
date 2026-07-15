@@ -1,9 +1,38 @@
 #!/usr/bin/env node
 import { execSync } from "child_process";
 import { mkdirSync, existsSync, readFileSync, appendFileSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-const issueNumber = process.argv[2];
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const flag = process.argv[2];
+if (flag === "--version" || flag === "-v") {
+  const pkg = JSON.parse(readFileSync(join(__dirname, "package.json"), "utf-8"));
+  console.log(pkg.version);
+  process.exit(0);
+}
+if (flag === "--help" || flag === "-h") {
+  console.log(`Usage: opencode-wt [issue-number] [agent]
+
+Create a git worktree and open opencode in it.
+
+Arguments:
+  issue-number    GitHub issue number (creates branch issue-<N> and fetches issue context)
+  agent           Optional agent name passed to opencode
+
+Flags:
+  -h, --help      Show this help message
+  -v, --version   Show version number
+
+Examples:
+  npx opencode-wt              # detached worktree
+  npx opencode-wt 42           # worktree for issue #42
+  npx opencode-wt 42 my-agent  # worktree for issue #42 with a specific agent`);
+  process.exit(0);
+}
+
+const issueNumber = flag;
 const agent = process.argv[3];
 const name = issueNumber ? `issue-${issueNumber}` : undefined;
 let root;
