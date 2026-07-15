@@ -3,7 +3,8 @@ import { execSync } from "child_process";
 import { mkdirSync, existsSync, readFileSync, appendFileSync } from "fs";
 import { join } from "path";
 
-const name = process.argv[2];
+const issueNumber = process.argv[2];
+const name = issueNumber ? `issue-${issueNumber}` : undefined;
 let root;
 try {
   root = execSync("git rev-parse --show-toplevel", { encoding: "utf-8" }).trim();
