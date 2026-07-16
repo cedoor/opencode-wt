@@ -63,6 +63,20 @@ if (name) {
   execSync(`git worktree add --detach "${wtDir}"`, { stdio: "inherit" });
 }
 
+// Install dependencies if a lockfile is present
+const lockfiles = {
+  "pnpm-lock.yaml": "pnpm install",
+  "package-lock.json": "npm install",
+  "yarn.lock": "yarn install",
+  "bun.lockb": "bun install",
+};
+for (const [file, cmd] of Object.entries(lockfiles)) {
+  if (existsSync(join(wtDir, file))) {
+    execSync(cmd, { cwd: wtDir, stdio: "inherit" });
+    break;
+  }
+}
+
 let prompt = `Welcome the user and ask what they'd like to work on. You are running inside a git worktree at "${wtDir}" — a separate working directory linked to the main repo. Always use "${wtDir}" as your working directory — worktrees have separate working directories, so files created in the main repo won't be visible here, and vice versa.`;
 if (issueNumber) {
   prompt += ` The user created this worktree for issue #${issueNumber}. Use your GitHub tools to fetch the issue details and ask if they'd like to start working on it.`;

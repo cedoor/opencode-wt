@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Create git worktrees and open opencode in them",
   "bin": {
-    "opencode-wt": "./bin.js"
+    "opencode-wt": "./main.js"
   },
   "keywords": [
     "git",
