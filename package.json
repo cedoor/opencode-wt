@@ -11,5 +11,8 @@
     "worktree",
     "opencode"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "release": "bash scripts/release.sh"
+  }
 }
