@@ -63,23 +63,16 @@ if (name) {
   execSync(`git worktree add --detach "${wtDir}"`, { stdio: "inherit" });
 }
 
-// Install dependencies and build if a lockfile is present
+// Install dependencies if a lockfile is present
 const lockfiles = {
-  "pnpm-lock.yaml": { install: "pnpm install", build: "pnpm build" },
-  "package-lock.json": { install: "npm install", build: "npm run build" },
-  "yarn.lock": { install: "yarn install", build: "yarn build" },
-  "bun.lockb": { install: "bun install", build: "bun run build" },
+  "pnpm-lock.yaml": "pnpm install",
+  "package-lock.json": "npm install",
+  "yarn.lock": "yarn install",
+  "bun.lockb": "bun install",
 };
-for (const [file, { install, build }] of Object.entries(lockfiles)) {
+for (const [file, install] of Object.entries(lockfiles)) {
   if (existsSync(join(wtDir, file))) {
     execSync(install, { cwd: wtDir, stdio: "inherit" });
-    const pkgPath = join(wtDir, "package.json");
-    if (existsSync(pkgPath)) {
-      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
-      if (pkg.scripts?.build) {
-        execSync(build, { cwd: wtDir, stdio: "inherit" });
-      }
-    }
     break;
   }
 }
