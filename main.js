@@ -68,6 +68,7 @@ const lockfiles = {
   "pnpm-lock.yaml": "pnpm install",
   "package-lock.json": "npm install",
   "yarn.lock": "yarn install",
+  "bun.lock": "bun install",
   "bun.lockb": "bun install",
 };
 for (const [file, install] of Object.entries(lockfiles)) {
