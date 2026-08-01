@@ -65,15 +65,24 @@ if (name) {
 
 // Install dependencies if a lockfile is present
 const lockfiles = {
+  "bun.lock": "bun install",
+  "bun.lockb": "bun install",
   "pnpm-lock.yaml": "pnpm install",
   "package-lock.json": "npm install",
   "yarn.lock": "yarn install",
-  "bun.lock": "bun install",
-  "bun.lockb": "bun install",
 };
 for (const [file, install] of Object.entries(lockfiles)) {
   if (existsSync(join(wtDir, file))) {
-    execSync(install, { cwd: wtDir, stdio: "inherit" });
+    try {
+      execSync(install, { cwd: wtDir, stdio: "inherit" });
+    } catch (error) {
+      const manager = install.split(" ")[0];
+      const missing =
+        /ENOENT|not found/i.test(String(error.message)) ? ` (is "${manager}" installed and in your PATH?)` : "";
+      console.error(
+        `Warning: "${install}" failed in the worktree. Run it manually before continuing.${missing}`,
+      );
+    }
     break;
   }
 }
